@@ -35,49 +35,40 @@ public class BookRepositoryIntegrationTest {
         assertThat(result.get()).isEqualTo(book);
     }
 //
-//    @Test
-//    public void testThatMultipleBooksCanBeCreatedAndRecalled() {
-//        Author authorA = TestDataUtil.createTestAuthorA();
-//        authorDao.create(authorA);
-//        Author authorB = TestDataUtil.createTestAuthorB();
-//        authorDao.create(authorB);
-//        Book bookA = TestDataUtil.createTestBookA();
-//        bookA.setAuthorId(authorA.getId());
-//        Book bookB = TestDataUtil.createTestBookB();
-//        bookB.setAuthorId(authorB.getId());
-//        Book bookC = TestDataUtil.createTestBookC();
-//        bookC.setAuthorId(authorA.getId());
-//        underTest.create(bookA);
-//        underTest.create(bookB);
-//        underTest.create(bookC);
+    @Test
+    public void testThatMultipleBooksCanBeCreatedAndRecalled() {
+        Author authorA = TestDataUtil.createTestAuthorA();
+        Author authorB = TestDataUtil.createTestAuthorB();
+        Book bookA = TestDataUtil.createTestBookA(authorA);
+        Book bookB = TestDataUtil.createTestBookB(authorB);
+        Book bookC = TestDataUtil.createTestBookC(authorA);
+        underTest.save(bookA);
+        underTest.save(bookB);
+        underTest.save(bookC);
+
+        assertThat(underTest.findAll()).hasSize(3).containsExactly(bookA, bookB, bookC);
+    }
 //
-//        assertThat(underTest.findMany()).hasSize(3).containsExactly(bookA, bookB, bookC);
-//    }
-//
-//    @Test
-//    public void testThatBookCanBeUpdated() {
-//        Author author = TestDataUtil.createTestAuthorA();
-//        authorDao.create(author);
-//        Book book = TestDataUtil.createTestBookA();
-//        book.setAuthorId(author.getId());
-//        underTest.create(book);
-//        book.setTitle("Updated Title");
-//        underTest.update(book.getIsbn(), book);
-//        Optional<Book> result = underTest.findOne(book.getIsbn());
-//        assertThat(result).isPresent();
-//        assertThat(result.get()).isEqualTo(book);
-//    }
-//
-//    @Test
-//    public void testThatBookCanBeDeleted() {
-//        Author author = TestDataUtil.createTestAuthorA();
-//        authorDao.create(author);
-//        Book book = TestDataUtil.createTestBookA();
-//        book.setAuthorId(author.getId());
-//        underTest.create(book);
-//        underTest.delete(book.getIsbn());
-//        Optional<Book> result = underTest.findOne(book.getIsbn());
-//        assertThat(result).isEmpty();
-//    }
+    @Test
+    public void testThatBookCanBeUpdated() {
+        Author author = TestDataUtil.createTestAuthorA();
+        Book book = TestDataUtil.createTestBookA(author);
+        underTest.save(book);
+        book.setTitle("Updated Title");
+        underTest.save(book);
+        Optional<Book> result = underTest.findById(book.getIsbn());
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(book);
+    }
+
+    @Test
+    public void testThatBookCanBeDeleted() {
+        Author author = TestDataUtil.createTestAuthorA();
+        Book book = TestDataUtil.createTestBookA(author);
+        underTest.save(book);
+        underTest.deleteById(book.getIsbn());
+        Optional<Book> result = underTest.findById(book.getIsbn());
+        assertThat(result).isEmpty();
+    }
 
 }
