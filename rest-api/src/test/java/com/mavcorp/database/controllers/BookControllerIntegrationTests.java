@@ -198,4 +198,16 @@ public class BookControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.author").value(bookEntityB.getAuthorEntity())
         );
     }
+
+    @Test
+    public void testThatDeleteBookReturnsHttp204NoContent() throws Exception {
+        BookEntity bookEntity = TestDataUtil.createTestBookA(null);
+        bookService.createUpdateBook(bookEntity.getIsbn(), bookEntity);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/books/"+ bookEntity.getIsbn())
+        ).andExpect(
+                MockMvcResultMatchers.status().isNoContent()
+        );
+    }
 }
