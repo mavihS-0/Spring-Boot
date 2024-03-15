@@ -20,7 +20,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorEntity createAuthor(AuthorEntity authorEntity) {
+    public AuthorEntity save(AuthorEntity authorEntity) {
         return authorRepository.save(authorEntity);
     }
 
@@ -32,5 +32,22 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Optional<AuthorEntity> findOne(Long id) {
         return authorRepository.findById(id);
+    }
+
+    @Override
+    public boolean isExists(Long id) {
+        return authorRepository.existsById(id);
+    }
+
+    @Override
+    public AuthorEntity partialUpdate(Long id, AuthorEntity authorEntity) {
+        authorEntity.setId(id);
+        return authorRepository.findById(id).map(existingAuthor ->{
+            Optional.ofNullable(authorEntity.getName()).ifPresent(existingAuthor::setName);
+            Optional.ofNullable(authorEntity.getAge()).ifPresent(existingAuthor::setAge);
+            return authorRepository.save(existingAuthor);
+        }).orElseThrow(
+                () -> new RuntimeException("Author does not exist")
+        );
     }
 }
