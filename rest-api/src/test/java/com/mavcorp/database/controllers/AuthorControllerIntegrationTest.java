@@ -112,4 +112,40 @@ public class AuthorControllerIntegrationTest {
         );
     }
 
+    @Test
+    public void testThatGetAuthorReturnsHttp200Ok() throws Exception {
+        AuthorEntity authorEntity = TestDataUtil.createTestAuthorA();
+        authorService.createAuthor(authorEntity);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/author?id="+authorEntity.getId())
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatGetAuthorReturnsAuthor() throws Exception {
+        AuthorEntity authorEntity = TestDataUtil.createTestAuthorA();
+        authorService.createAuthor(authorEntity);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/author?id="+authorEntity.getId())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").isNumber()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.name").value(authorEntity.getName())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.age").value(authorEntity.getAge())
+        );
+    }
+
+    @Test
+    public void testThatGetAuthorReturnsHttp404NotFound() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/author?id=2")
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
 }
