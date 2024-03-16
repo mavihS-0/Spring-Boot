@@ -4,6 +4,8 @@ import com.mavcorp.database.domain.dto.BookDto;
 import com.mavcorp.database.domain.entities.BookEntity;
 import com.mavcorp.database.mappers.Mapper;
 import com.mavcorp.database.services.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,9 +42,9 @@ public class BookController {
     }
 
     @GetMapping(path = "/books")
-    public ResponseEntity<List<BookDto>> listBooks(){
-        List<BookEntity> books = bookService.findAll();
-        return new ResponseEntity<>(books.stream().map(bookMapper::mapTo).collect(Collectors.toList()), HttpStatus.OK);
+    public ResponseEntity<Page<BookDto>> listBooks(Pageable pageable){
+        Page<BookEntity> books = bookService.findAll(pageable);
+        return new ResponseEntity<>(books.map(bookMapper::mapTo), HttpStatus.OK);
     }
 
     @GetMapping(path = "/books/{isbn}")

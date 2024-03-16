@@ -1,6 +1,8 @@
 package com.mavcorp.database.services;
 
 import com.mavcorp.database.domain.entities.AuthorEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +13,8 @@ public interface AuthorService {
     AuthorEntity save(AuthorEntity authorEntity);
 
     List<AuthorEntity> findAll();
+
+    Page<AuthorEntity> findAll(Pageable pageable);
 
     Optional<AuthorEntity> findOne(Long id);
 

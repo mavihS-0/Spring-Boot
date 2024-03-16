@@ -3,6 +3,8 @@ package com.mavcorp.database.services.impl;
 import com.mavcorp.database.domain.entities.AuthorEntity;
 import com.mavcorp.database.repositories.AuthorRepository;
 import com.mavcorp.database.services.AuthorService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +29,11 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<AuthorEntity> findAll() {
         return StreamSupport.stream(authorRepository.findAll().spliterator(),false).collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<AuthorEntity> findAll(Pageable pageable) {
+        return authorRepository.findAll(pageable);
     }
 
     @Override
