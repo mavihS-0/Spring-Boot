@@ -15,11 +15,8 @@ import javax.sql.DataSource;
 public class BooksApiApplication implements CommandLineRunner {
 	private final DataSource dataSource;
 
-	private final AuthorRepository authorRepository;
-
-	public BooksApiApplication(final DataSource dataSource, AuthorRepository authorRepository) {
+	public BooksApiApplication(final DataSource dataSource) {
 		this.dataSource = dataSource;
-        this.authorRepository = authorRepository;
     }
 
 	public static void main(String[] args) {
@@ -30,7 +27,5 @@ public class BooksApiApplication implements CommandLineRunner {
 		log.info("Datasource: "+dataSource.toString());
 		final JdbcTemplate restTemplate = new JdbcTemplate(dataSource);
 		restTemplate.execute("select 1");
-		AuthorEntity authorEntity = AuthorEntity.builder().id(1L).name("SHIVAM").age(20).build();
-		authorRepository.save(authorEntity);
 	}
 }
